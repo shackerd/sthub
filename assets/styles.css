@@ -1,0 +1,271 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    background: #f9fafb;
+    color: #22272e;
+    font-family: "Inter", "Roboto", sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+h1,
+h2,
+h3 {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #3366ff; /* bleu clair, proéminent */
+}
+
+header p {
+    margin: 0;
+    font-style: italic;
+}
+
+header {
+    background: linear-gradient(90deg, #407cff 0%, #7e2cff 100%);
+    color: #fff;
+    padding: 2rem;
+    text-align: center;
+    border-radius: 0 0 16px 16px;
+    box-shadow: 0 4px 16px rgba(34, 36, 40, 0.08);
+    margin-bottom: 2rem;
+}
+header h1 {
+    margin-bottom: 0.5rem;
+    color: #fff;
+    font-family: "Inter", sans-serif;
+}
+
+/* Footer général */
+footer {
+    background: #fff;
+    border-radius: 0 0 16px 16px;
+    box-shadow: 0 -2px 8px rgba(34, 36, 40, 0.06);
+    padding: 1rem 2rem;
+    text-align: center;
+    color: #6b7280;
+    font-size: 0.9rem;
+    margin-top: 3rem;
+}
+
+footer a {
+    color: #3366ff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+footer a:hover {
+    color: #7e2cff;
+}
+
+.card,
+section {
+    background: rgba(255, 255, 255, 0.97); /* effet glass clair */
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(34, 36, 40, 0.08);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    backdrop-filter: blur(2px);
+}
+
+.button {
+    display: inline-block;
+    background: linear-gradient(90deg, #407cff 0%, #7e2cff 100%);
+    color: #fff;
+    padding: 0.75em 1.5em;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s;
+    box-shadow: 0 2px 8px rgba(64, 124, 255, 0.12);
+    border: none;
+    cursor: pointer;
+}
+.button:hover {
+    background: linear-gradient(90deg, #2c51c8 0%, #5233be 100%);
+}
+
+.download-btn {
+    background: #4285f4;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.download-btn:hover {
+    background: #3367d6;
+}
+
+a {
+    color: #7e2cff;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+a:hover {
+    color: #407cff;
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+}
+
+.nav-link {
+    color: #6b7280;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.nav-link:hover {
+    color: #1a1a1a;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+/*nav {
+    background: #fff;
+    padding: 1rem 2rem;
+    border-radius: 12px 12px 0 0;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 8px rgba(34, 36, 40, 0.06);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+nav a {
+    color: #3366ff;
+    font-weight: 600;
+    margin-right: 1.5rem;
+}
+
+nav li {
+    display: inline;
+    font-size: 1rem;
+    font-family:
+        "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans",
+        Arial, sans-serif;
+}*/
+
+@media (max-width: 800px) {
+    .card,
+    section {
+        padding: 1rem;
+    }
+    nav,
+    header {
+        padding: 0.5rem 1rem;
+    }
+}
+/* Conteneur principal de l'arbre */
+.treeview {
+    font-family: "Inter", "Roboto", sans-serif;
+    font-size: 1rem;
+    color: #22272e;
+    background: #f9fafb;
+    padding: 1rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(34, 36, 40, 0.08);
+    max-width: 360px;
+}
+
+/* Liste principale sans puces */
+.treeview ul {
+    list-style: none;
+    padding-left: 1rem;
+    margin: 0;
+}
+
+/* Eléments de la liste */
+.treeview li {
+    position: relative;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+/* Texte des éléments */
+.treeview li span {
+    padding-left: 1.5rem;
+    display: inline-block;
+    transition: color 0.2s;
+}
+
+/* Flèche d'expansion (caret), positionnée avant le texte */
+.treeview li .caret::before {
+    content: "\25B6"; /* triangle droit */
+    position: absolute;
+    left: 0;
+    top: 0.2rem;
+    transform: rotate(0deg);
+    transition: transform 0.3s ease;
+    color: #7e2cff; /* violet zed.dev */
+    font-size: 0.9rem;
+}
+
+/* Flèche tournée vers le bas quand actif */
+.treeview li .caret.caret-down::before {
+    transform: rotate(90deg);
+    color: #407cff; /* bleu zed.dev */
+}
+
+/* Sous-listes cachées par défaut */
+.treeview ul.nested {
+    display: none;
+    padding-left: 1rem;
+    border-left: 2px solid #d1d5db; /* gris clair */
+    margin-left: 1rem;
+}
+
+/* Sous-listes affichées quand activées */
+.treeview ul.nested.active {
+    display: block;
+}
+
+/* Survol */
+.treeview li:hover span {
+    color: #407cff; /* bleu */
+}
+
+/* Pour les éléments sans sous-listes, masquer la flèche */
+.treeview li.no-caret .caret::before {
+    content: "";
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .treeview {
+        max-width: 100%;
+        padding: 0.5rem;
+    }
+    .treeview li span {
+        padding-left: 1.2rem;
+    }
+    .treeview li .caret::before {
+        font-size: 0.8rem;
+        top: 0.1rem;
+    }
+}
+
+#output {
+    animation: fadeIn 0.3s ease-in-out;
+    transition: opacity 0.3s ease-in-out;
+}
