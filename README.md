@@ -20,4 +20,4 @@ Bring simplicity to static file serving, allowing you to focus on your applicati
 
 ## Documentation
 
-TODO
+See the [documentation page](https://shackerd.github.io/sthub/#/) for more information on how to use the server and its features.
