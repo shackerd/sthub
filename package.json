@@ -10,7 +10,7 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "start": "docsify serve ./doc"
+    "start": "docsify serve ./docs"
   },
   "dependencies": {
     "docsify-cli": "^4.4.4"
