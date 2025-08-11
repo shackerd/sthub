@@ -1,0 +1,18 @@
+{
+  "name": "sthub-doc",
+  "version": "1.0.0",
+  "description": "sthub-doc",
+  "keywords": [
+    "sthub-doc"
+  ],
+  "license": "MIT",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "docsify serve ./doc"
+  },
+  "dependencies": {
+    "docsify-cli": "^4.4.4"
+  }
+}

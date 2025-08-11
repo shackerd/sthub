@@ -17,3 +17,7 @@ Bring simplicity to static file serving, allowing you to focus on your applicati
 - Serve static files from a directory (NOT YET IMPLEMENTED)
 - Serve environment variables (WIP)
 - Serve configuration files (NOT YET IMPLEMENTED)
+
+## Documentation
+
+TODO
