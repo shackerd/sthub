@@ -1,4 +1,6 @@
 # sthub
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fshackerd%2Fsthub.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fshackerd%2Fsthub?ref=badge_shield)
+
 *"(static)-hub"* — Your static and config hub, simplified
 
 This project is heavily under development and is not yet ready for production use. It is a work in progress and is subject to change.
@@ -21,3 +23,7 @@ Bring simplicity to static file serving, allowing you to focus on your applicati
 ## Documentation
 
 See the [documentation page](https://shackerd.github.io/sthub/#/) for more information on how to use the server and its features.
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fshackerd%2Fsthub.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fshackerd%2Fsthub?ref=badge_large)
