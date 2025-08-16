@@ -3,25 +3,25 @@ network:
 hubs:
   static:
     # The directory where static files belong
-    path: "/var/www/html"
-    # The desired host which will be served
+    path: "/var/www/html/"
+    # The desired host which will be served (not implemented)
     host: "example.com"
     # Apache like rules
     rewrite_rules: |
-      RewriteEngine Off
+      RewriteEngine On
       RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -f [OR]
       RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -d
       RewriteRule ^ - [L]
       RewriteRule ^ /index.html
-    # Add custom headers to reponses
+    # Add custom headers to reponses (not implemented)
     headers:
       "Server": "sthub"
   configuration:
     host: "example.com"
-    cache: true
+    cache: true # (not implemented)
     providers:
-      - env:
-          prefix: "MYAPI"
-      - dotenv:
-          path: "./.env"
-          hotreload: true
+      env:
+        prefix: "MYAPI"
+      dotenv: # (not implemented)
+        path: "./.env"
+        hotreload: true

@@ -1,42 +1,43 @@
 use serde::Deserialize;
 use std::collections::HashMap;
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct Configuration {
     pub network: Option<NetworkConfiguration>,
     pub hubs: Option<ConfigurationHubs>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct ConfigurationHubs {
     #[serde(alias = "static")]
     pub _static: Option<StaticHubConfiguration>,
-    pub configuration: Option<ConfigurationHubProviders>,
+    pub configuration: Option<ConfigurationHubConfiguration>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct ConfigurationHubConfiguration {
     pub host: Option<String>,
     pub cache: Option<bool>,
+    pub providers: Option<ConfigurationHubProviders>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct ConfigurationHubProviders {
     pub env: Option<EnvConfigurationHubProvider>,
     pub dotenv: Option<DotenvConfigurationProvider>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct EnvConfigurationHubProvider {
     pub prefix: Option<String>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct DotenvConfigurationProvider {
     pub hotreload: Option<bool>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct StaticHubConfiguration {
     pub path: Option<String>,
     pub host: Option<String>,
@@ -44,17 +45,9 @@ pub struct StaticHubConfiguration {
     pub headers: Option<HashMap<String, String>>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct NetworkConfiguration {
     pub port: Option<u16>,
-}
-
-impl EnvConfigurationHubProvider {
-    /// Returns the prefix of the configuration.
-    pub fn get_prefix<'a>(&'a self) -> &'a str {
-        let value = self.prefix.as_ref().unwrap();
-        &value
-    }
 }
 
 pub async fn load_configuration(
@@ -83,9 +76,12 @@ mod tests {
                 .unwrap()
                 .configuration
                 .unwrap()
+                .providers
+                .unwrap()
                 .env
                 .unwrap()
-                .get_prefix(),
+                .prefix
+                .unwrap(),
             "STHUB__"
         );
     }
