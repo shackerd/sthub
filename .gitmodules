@@ -1,6 +1,6 @@
-[submodule "actix-services"]
+[submodule "includes/actix-services"]
 	path = includes/actix-services
 	url = git@github.com:shackerd/actix-services.git
-[submodule "rust_rewrite"]
+[submodule "includes/rust_rewrite"]
 	path = includes/rust_rewrite
 	url = git@github.com:shackerd/rust_rewrite.git
