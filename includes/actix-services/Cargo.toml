@@ -1,0 +1,3 @@
+[workspace]
+resolver = "3"
+members = [ "actix-authn","actix-chain","actix-fastcgi", "actix-modsecurity", "actix-revproxy", "actix-rewrite", "actix-sanitize"]

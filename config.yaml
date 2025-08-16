@@ -1,0 +1,30 @@
+network:
+  port: 8080
+hubs:
+  static:
+    # The directory where static files belong
+    path: "/var/www/html"
+    # The desired host which will be served
+    host: "example.com"
+    # Apache like rules
+    rewrite_rules: |
+      RewriteEngine On
+      # If an existing asset or directory is requested go to it as it is
+      RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -f [OR]
+      RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -d
+      RewriteRule ^ - [L]
+
+      # If the requested resource doesn't exist, use index.html
+      RewriteRule ^ /index.html
+    # Add custom headers to reponses
+    headers:
+      - "Server": "sthub"
+  configuration:
+    host: "example.com"
+    cache: true
+    providers:
+      - env:
+          prefix: "MYAPI"
+      - dotenv:
+          path: "./.env"
+          hotreload: true

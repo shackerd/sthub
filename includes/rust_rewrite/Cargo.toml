@@ -1,0 +1,31 @@
+[package]
+name = "mod_rewrite"
+version = "0.2.0"
+edition = "2024"
+
+authors = [
+  "Andrew Scott <imgurbot12@gmail.com>"
+]
+
+license = "MIT"
+keywords = ["rewrite", "mod_rewrite", "routing", "web", "middleware"]
+description = "Dynamic routing rewrite library inspired by apache mod_rewrite"
+
+repository = "https://github.com/imgurbot12/rust_rewrite"
+documentation = "https://docs.rs/mod_rewrite/"
+
+[dependencies]
+chrono = "0.4"
+once_cell = "1"
+percent-encoding = "2"
+regex-automata = "0.4"
+thiserror = "2"
+unicase = "2"
+
+[dev-dependencies]
+criterion = "0.5"
+pprof = { version = "0.15.0", features = ["criterion", "flamegraph"] }
+
+[[bench]]
+name = "expr"
+harness = false

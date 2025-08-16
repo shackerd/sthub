@@ -1,0 +1,27 @@
+[package]
+name = "actix-modsecurity"
+version = "0.1.2"
+edition = "2024"
+authors = [
+  "Andrew Scott <imgurbot12@gmail.com>"
+]
+
+license = "MIT"
+keywords = ["actix-web", "modsecurity", "security", "middleware"]
+description = "ModSecurity middleware service and library for Actix Web"
+
+repository = "https://github.com/imgurbot12/actix-services/tree/master/actix-modsecurity"
+documentation = "https://docs.rs/actix-modsecurity/"
+
+[dependencies]
+actix-http = { version = "3.11.0", default-features = false }
+actix-service = "2.0.3"
+actix-web = { version = "4.11.0", default-features = false }
+derive_more = { version = "2.0.1", features = ["display"] }
+futures-core = { version = "0.3.31", default-features = false }
+modsecurity = "0.1.4"
+tracing = "0.1.41"
+
+[dev-dependencies]
+actix-web = { version = "4.11.0", default-features = false, features = ["macros"] }
+tracing-subscriber = "0.3.19"

@@ -1,6 +1,10 @@
 use actix_files::NamedFile;
+use actix_rewrite::Engine;
 use actix_web::{App, HttpRequest, HttpServer, Responder, web};
 use std::path::PathBuf;
+
+use crate::core::configuration::load_configuration;
+mod core;
 mod environment;
 
 async fn index(req: HttpRequest) -> actix_web::Result<NamedFile> {
@@ -18,15 +22,32 @@ async fn doc_index(req: HttpRequest) -> actix_web::Result<NamedFile> {
 }
 
 async fn env_api() -> impl Responder {
-    let environment = environment::JsonEnvironmentVarsTree::new("STHUB__");
-    let tree = environment.build();
+    let environment = environment::JsonEnvironmentVarsTree::new("MYAPI__");
+    let tree = environment.build(); // this should be stored in volatile memory cache for performance purposes
     web::Json(tree)
 }
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    HttpServer::new(|| {
+    let conf = load_configuration("./config.yaml").await;
+
+    let mut engine = Engine::new();
+
+    // test purposes
+    let rules = conf
+        .unwrap()
+        .hubs
+        .unwrap()
+        ._static
+        .unwrap()
+        .rewrite_rules
+        .unwrap();
+
+    engine.add_rules(&rules).expect("failed to process rules");
+
+    HttpServer::new(move || {
         App::new()
+            .wrap(engine.clone().middleware())
             .route("/env", web::get().to(env_api))
             .route("/doc/{filename:.*}", web::get().to(doc_index))
             .route("/{filename:.*}", web::get().to(index))

@@ -1,0 +1,24 @@
+[package]
+name = "actix-chain"
+version = "0.1.0"
+edition = "2024"
+authors = [
+  "Andrew Scott <imgurbot12@gmail.com>"
+]
+
+license = "MIT"
+keywords = ["actix-web", "service", "chain", "routing", "middleware"]
+description = "Actix-Web service chaining service."
+
+repository = "https://github.com/imgurbot12/actix-services/tree/master/actix-chain"
+documentation = "https://docs.rs/actix-chain/"
+
+[dependencies]
+actix-service = "2.0.3"
+actix-web = { version = "4.11.0", default-features = false }
+futures-core = { version = "0.3.31", default-features = false }
+tracing = "0.1.41"
+
+[dev-dependencies]
+actix-web = { version = "4.11.0", default-features = false, features = ["macros"] }
+tracing-subscriber = "0.3.19"
