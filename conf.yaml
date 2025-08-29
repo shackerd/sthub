@@ -13,7 +13,7 @@ hubs:
     host: example.com
     # Apache like rules
     rewrite_rules: |
-      RewriteEngine Off
+      RewriteEngine On
       RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} !-f
       RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} !-d
       RewriteRule ^ /index.html
