@@ -1,10 +1,10 @@
 use actix_files::Files;
 use actix_rewrite::Engine;
-use actix_web::{App, HttpRequest, HttpServer, Responder, web};
+use actix_web::{App, HttpServer, web};
 
 use crate::{
     core::configuration::{Configuration, try_get_rules},
-    environment,
+    net::environment_middleware::EnvironmentMiddleware,
 };
 
 pub struct HttpAdapter<'a> {
@@ -34,8 +34,9 @@ impl<'a> HttpAdapter<'a> {
         HttpServer::new(move || {
             App::new()
                 .app_data(web::Data::new(conf.clone()))
-                .configure(|cfg: &mut web::ServiceConfig| config(cfg, rules.as_ref().is_some()))
                 .wrap(engine.clone().middleware())
+                .wrap(EnvironmentMiddleware)
+                .configure(|cfg: &mut web::ServiceConfig| config(cfg, &conf))
         })
         .bind(format!("127.0.0.1:{port}"))?
         .run()
@@ -43,35 +44,18 @@ impl<'a> HttpAdapter<'a> {
     }
 }
 
-fn config(cfg: &mut web::ServiceConfig, _rewrite_on: bool) {
-    cfg.route("/env", web::get().to(configuration_hub));
+fn config(cfg: &mut web::ServiceConfig, conf: &Configuration) {
+    let path = conf
+        .hubs
+        .clone()
+        .and_then(|h| h._static)
+        .and_then(|f| f.path)
+        .unwrap_or_else(|| "/var/www/html/".to_string());
 
-    // Always serve static files with index.html as default
-    // Get static path from configuration if needed
-    let static_path = "/var/www/html/"; // Or get from your configuration
     cfg.service(
-        Files::new("/", static_path)
+        Files::new("/", path)
             .index_file("index.html")
             .use_last_modified(true)
             .prefer_utf8(true),
     );
-}
-
-async fn configuration_hub(_: HttpRequest, conf: web::Data<Configuration>) -> impl Responder {
-    let prefix = conf
-        .hubs
-        .clone()
-        .unwrap()
-        .configuration
-        .unwrap()
-        .providers
-        .unwrap()
-        .env
-        .unwrap()
-        .prefix
-        .unwrap();
-
-    let environment = environment::JsonEnvironmentVarsTree::new(&format!("{}__", &prefix));
-    let tree = environment.build(); // this should be stored in volatile memory cache for performance purposes
-    web::Json(tree)
 }
