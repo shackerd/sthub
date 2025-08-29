@@ -50,28 +50,37 @@ pub struct NetworkConfiguration {
     pub port: Option<u16>,
 }
 
-pub async fn load_configuration(
-    path: &str,
-) -> Result<Configuration, Box<dyn std::error::Error + Send + Sync>> {
+pub async fn load_configuration(path: &str) -> std::io::Result<Configuration> {
     let res = tokio::fs::read_to_string(path)
         .await
         .expect("Failed to read configuration file");
 
-    let config = serde_yaml::from_str::<Configuration>(&res)?;
+    let config = serde_yaml::from_str::<Configuration>(&res).unwrap();
     Ok(config)
+}
+
+pub fn try_get_rules(conf: &Configuration) -> Option<String> {
+    if let Some(h) = conf.hubs.clone() {
+        if let Some(s) = h._static {
+            return s.rewrite_rules;
+        }
+    }
+    None
 }
 
 #[cfg(test)]
 mod tests {
+
+    use assertables::assert_starts_with;
+
     use super::*;
 
     #[tokio::test]
     async fn test_load_configuration() {
-        let config = load_configuration("config.yaml").await;
-        assert!(config.is_ok());
+        let conf = load_configuration("conf.yaml").await;
+        assert!(conf.is_ok());
         assert_eq!(
-            config
-                .unwrap()
+            conf.unwrap()
                 .hubs
                 .unwrap()
                 .configuration
@@ -84,5 +93,15 @@ mod tests {
                 .unwrap(),
             "STHUB__"
         );
+    }
+
+    #[tokio::test]
+    async fn test_try_get_rules() {
+        let conf = load_configuration("conf.yaml").await;
+        assert!(conf.is_ok());
+
+        let conf = conf.unwrap();
+
+        assert_starts_with!(try_get_rules(&conf).unwrap(), "RewriteEngine On");
     }
 }

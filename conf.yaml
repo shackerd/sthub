@@ -1,27 +1,32 @@
 network:
   port: 8080
 hubs:
+  upstream: # not implemented
+    target: 127.0.0.1:3000
+    remote_path: /proxy_pass
+    host: example.com
   static:
+    remote_path: /
     # The directory where static files belong
     path: "/var/www/html/"
     # The desired host which will be served (not implemented)
-    host: "example.com"
+    host: example.com
     # Apache like rules
     rewrite_rules: |
-      RewriteEngine On
-      RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -f [OR]
-      RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -d
-      RewriteRule ^ - [L]
+      RewriteEngine Off
+      RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} !-f
+      RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} !-d
       RewriteRule ^ /index.html
     # Add custom headers to reponses (not implemented)
     headers:
-      "Server": "sthub"
+      Server: sthub
   configuration:
     host: "example.com"
+    remote_path: /env
     cache: true # (not implemented)
     providers:
       env:
-        prefix: "MYAPI"
+        prefix: "STHUB"
       dotenv: # (not implemented)
         path: "./.env"
         hotreload: true
