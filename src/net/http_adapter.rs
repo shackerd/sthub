@@ -3,9 +3,15 @@ use actix_rewrite::Engine;
 use actix_web::{App, HttpServer, web};
 
 use crate::{
-    core::configuration::{Configuration, try_get_rules},
-    net::environment_middleware::EnvironmentMiddleware,
+    core::configuration::Configuration,
+    net::{environment_middleware::EnvironmentMiddleware, headers_middleware::HeadersMiddleware},
 };
+
+const DEFAULT_PORT: u16 = 8080;
+const DEFAULT_HOST: &str = "localhost";
+const DEFAULT_STATIC_PATH: &str = "/var/www/html/";
+const DEFAULT_DOCUMENT: &str = "index.html";
+const DEFAULT_REMOTE_PATH: &str = "/";
 
 pub struct HttpAdapter<'a> {
     configuration: &'a Configuration,
@@ -17,44 +23,69 @@ impl<'a> HttpAdapter<'a> {
     }
 
     pub async fn run(&self) -> Result<(), std::io::Error> {
-        let conf = self.configuration.clone();
-
         let mut engine = Engine::new();
 
-        let rules = try_get_rules(self.configuration);
+        let rules = self
+            .configuration
+            .hubs
+            .as_ref()
+            .and_then(|h| h._static.as_ref())
+            .and_then(|s| s.rewrite_rules.clone());
 
         if let Some(r) = rules.as_ref() {
             engine.add_rules(r).expect("failed to process rules");
         }
 
-        let port = conf.network.clone().unwrap().port.unwrap();
+        let host = self
+            .configuration
+            .network
+            .as_ref()
+            .and_then(|f| f.host.clone())
+            .unwrap_or_else(|| DEFAULT_HOST.to_string());
 
-        println!("running sthub on port:{port}");
+        let port = self
+            .configuration
+            .network
+            .as_ref()
+            .and_then(|f| f.port)
+            .unwrap_or(DEFAULT_PORT);
+
+        let static_path = self
+            .configuration
+            .hubs
+            .as_ref()
+            .and_then(|h| h._static.as_ref())
+            .and_then(|s| s.path.clone())
+            .unwrap_or_else(|| DEFAULT_STATIC_PATH.to_string());
+
+        let remote_path = self
+            .configuration
+            .hubs
+            .as_ref()
+            .and_then(|h| h._static.as_ref())
+            .and_then(|c| c.remote_path.clone())
+            .unwrap_or_else(|| DEFAULT_REMOTE_PATH.to_string());
+
+        let conf = self.configuration.clone();
 
         HttpServer::new(move || {
             App::new()
                 .app_data(web::Data::new(conf.clone()))
                 .wrap(engine.clone().middleware())
                 .wrap(EnvironmentMiddleware)
-                .configure(|cfg: &mut web::ServiceConfig| config(cfg, &conf))
+                .wrap(HeadersMiddleware)
+                .configure(|cfg: &mut web::ServiceConfig| config(cfg, &remote_path, &static_path))
         })
-        .bind(format!("127.0.0.1:{port}"))?
+        .bind(format!("{host}:{port}"))?
         .run()
         .await
     }
 }
 
-fn config(cfg: &mut web::ServiceConfig, conf: &Configuration) {
-    let path = conf
-        .hubs
-        .clone()
-        .and_then(|h| h._static)
-        .and_then(|f| f.path)
-        .unwrap_or_else(|| "/var/www/html/".to_string());
-
+fn config(cfg: &mut web::ServiceConfig, remote_path: &str, static_path: &str) {
     cfg.service(
-        Files::new("/", path)
-            .index_file("index.html")
+        Files::new(remote_path, static_path)
+            .index_file(DEFAULT_DOCUMENT)
             .use_last_modified(true)
             .prefer_utf8(true),
     );

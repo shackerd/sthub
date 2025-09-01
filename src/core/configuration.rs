@@ -16,7 +16,7 @@ pub struct ConfigurationHubs {
 
 #[derive(Deserialize, Debug, Clone)]
 pub struct ConfigurationHubConfiguration {
-    pub host: Option<String>,
+    pub remote_path: Option<String>,
     pub cache: Option<bool>,
     pub providers: Option<ConfigurationHubProviders>,
 }
@@ -39,8 +39,8 @@ pub struct DotenvConfigurationProvider {
 
 #[derive(Deserialize, Debug, Clone)]
 pub struct StaticHubConfiguration {
+    pub remote_path: Option<String>,
     pub path: Option<String>,
-    pub host: Option<String>,
     pub rewrite_rules: Option<String>,
     pub headers: Option<HashMap<String, String>>,
 }
@@ -48,6 +48,7 @@ pub struct StaticHubConfiguration {
 #[derive(Deserialize, Debug, Clone)]
 pub struct NetworkConfiguration {
     pub port: Option<u16>,
+    pub host: Option<String>,
 }
 
 pub async fn load_configuration(path: &str) -> std::io::Result<Configuration> {
@@ -57,15 +58,6 @@ pub async fn load_configuration(path: &str) -> std::io::Result<Configuration> {
 
     let config = serde_yaml::from_str::<Configuration>(&res).unwrap();
     Ok(config)
-}
-
-pub fn try_get_rules(conf: &Configuration) -> Option<String> {
-    if let Some(h) = conf.hubs.clone() {
-        if let Some(s) = h._static {
-            return s.rewrite_rules;
-        }
-    }
-    None
 }
 
 #[cfg(test)]
@@ -93,15 +85,5 @@ mod tests {
                 .unwrap(),
             "STHUB__"
         );
-    }
-
-    #[tokio::test]
-    async fn test_try_get_rules() {
-        let conf = load_configuration("conf.yaml").await;
-        assert!(conf.is_ok());
-
-        let conf = conf.unwrap();
-
-        assert_starts_with!(try_get_rules(&conf).unwrap(), "RewriteEngine On");
     }
 }

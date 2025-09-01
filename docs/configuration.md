@@ -33,6 +33,7 @@ network:
   port: 8080
 hubs:
   static:
+    remote_path: /
     path: "/var/www/html/"
     # To enable rewrite mode, provide rewrite_rules:
     rewrite_rules: |
@@ -43,6 +44,42 @@ hubs:
 ```
 
 ---
+
+## Matching `remote_path` with Rewrite Rules
+
+When configuring a static hub in your `conf.yaml`, the `remote_path` determines the URL prefix that the hub will handle. **All rewrite rules you define must match requests that begin with this `remote_path`.** If a rewrite rule does not match the `remote_path`, it will not be applied to incoming requests.
+
+### How it works
+
+- Only requests matching this prefix are processed by the hub and its rewrite rules.
+- Rewrite rules are then applied to the path **after** the `remote_path` prefix.
+
+#### Example
+
+Given this configuration:
+```yaml
+hubs:
+  static:
+    remote_path: /public
+    path: "/var/www/html/"
+    rewrite_rules: |
+      RewriteEngine On
+      RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} !-f
+      RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} !-d
+      RewriteRule ^ /public/index.html
+```
+
+- Only requests starting with `/public` (e.g., `/public/app.js`, `/public/anything`) will be handled by this hub.
+- The rewrite rule `RewriteRule ^ /public/index.html` will only apply to requests under `/public`.
+- Requests to `/other` or `/env` will **not** be affected by these rules.
+
+#### Important
+
+- **Always ensure your rewrite rules target paths that include the `remote_path` prefix.**
+- If you want to rewrite all unknown routes under `/public` to `/public/index.html`, your rule should be `RewriteRule ^ /public/index.html` (not just `/index.html`).
+
+---
+
 
 ## Configuration Options
 

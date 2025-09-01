@@ -1,16 +1,14 @@
 network:
   port: 8080
+  host: "localhost"
 hubs:
   upstream: # not implemented
     target: 127.0.0.1:3000
     remote_path: /proxy_pass
-    host: example.com
   static:
     remote_path: /
     # The directory where static files belong
     path: "/var/www/html/"
-    # The desired host which will be served (not implemented)
-    host: example.com
     # Apache like rules
     rewrite_rules: |
       RewriteEngine On
@@ -19,10 +17,10 @@ hubs:
       RewriteRule ^ /index.html
     # Add custom headers to reponses (not implemented)
     headers:
-      Server: sthub
+      "Server": sthub
+      "Foo": "bar"
   configuration:
-    host: "example.com"
-    remote_path: /env
+    remote_path: /conf
     cache: true # (not implemented)
     providers:
       env:
