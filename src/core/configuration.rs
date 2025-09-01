@@ -4,6 +4,7 @@ use std::collections::HashMap;
 #[derive(Deserialize, Debug, Clone)]
 pub struct Configuration {
     pub network: Option<NetworkConfiguration>,
+    pub global: Option<GlobalConfiguration>,
     pub hubs: Option<ConfigurationHubs>,
 }
 
@@ -18,7 +19,13 @@ pub struct ConfigurationHubs {
 pub struct ConfigurationHubConfiguration {
     pub remote_path: Option<String>,
     pub cache: Option<bool>,
+    pub headers: Option<HashMap<String, String>>,
     pub providers: Option<ConfigurationHubProviders>,
+}
+
+#[derive(Deserialize, Debug, Clone)]
+pub struct GlobalConfiguration {
+    pub headers: Option<HashMap<String, String>>,
 }
 
 #[derive(Deserialize, Debug, Clone)]
@@ -74,15 +81,11 @@ mod tests {
         assert_eq!(
             conf.unwrap()
                 .hubs
-                .unwrap()
-                .configuration
-                .unwrap()
-                .providers
-                .unwrap()
-                .env
-                .unwrap()
-                .prefix
-                .unwrap(),
+                .and_then(|c| c.configuration)
+                .and_then(|c| c.providers)
+                .and_then(|c| c.env)
+                .and_then(|c| c.prefix)
+                .unwrap_or("KO".to_string()),
             "STHUB__"
         );
     }

@@ -2,6 +2,7 @@ use serde_json::{Map, Value};
 use std::{collections::BTreeMap, env};
 
 const SEPARATOR: &str = "__";
+pub const DEFAULT_ENV_PREFIX: &str = "STHUB__";
 
 /// This module provides functionality to build a JSON tree from environment variables
 /// that start with a specified prefix. The environment variables are expected to be

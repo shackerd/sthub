@@ -1,5 +1,6 @@
 use crate::core::configuration::Configuration;
-use crate::environment;
+use crate::environment::{self, DEFAULT_ENV_PREFIX};
+use crate::net::DEFAULT_CONF_REMOTE_PATH;
 use actix_web::body::MessageBody;
 use actix_web::{
     Error, HttpResponse,
@@ -9,9 +10,6 @@ use actix_web::{
 use std::future::{Future, Ready, ready};
 use std::pin::Pin;
 use std::task::{Context, Poll};
-
-const DEFAULT_PREFIX: &str = "STHUB__";
-const DEFAULT_REMOTE_PATH: &str = "/env";
 
 pub struct EnvironmentMiddleware;
 
@@ -60,7 +58,7 @@ where
             .and_then(|f| f.hubs.clone())
             .and_then(|f| f.configuration)
             .and_then(|f| f.remote_path)
-            .unwrap_or(DEFAULT_REMOTE_PATH.to_string());
+            .unwrap_or(DEFAULT_CONF_REMOTE_PATH.to_string());
 
         let prefix = conf
             .and_then(|f| f.hubs.clone())
@@ -68,7 +66,7 @@ where
             .and_then(|f| f.providers)
             .and_then(|f| f.env)
             .and_then(|f| f.prefix)
-            .unwrap_or(DEFAULT_PREFIX.to_string());
+            .unwrap_or(DEFAULT_ENV_PREFIX.to_string());
 
         if path == conf_remote_path {
             let (req, _pl) = req.into_parts();
