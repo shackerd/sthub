@@ -4,7 +4,10 @@ use actix_web::{App, HttpServer, web};
 
 use crate::{
     core::configuration::Configuration,
-    net::{environment_middleware::EnvironmentMiddleware, headers_middleware::HeadersMiddleware},
+    net::{
+        environment_middleware::EnvironmentMiddleware, headers_middleware::HeadersMiddleware,
+        reverse_proxy_middleware::ReverseProxyMiddleware,
+    },
 };
 
 const DEFAULT_PORT: u16 = 8080;
@@ -73,6 +76,7 @@ impl<'a> HttpAdapter<'a> {
                 .app_data(web::Data::new(conf.clone()))
                 .wrap(engine.clone().middleware())
                 .wrap(EnvironmentMiddleware)
+                .wrap(ReverseProxyMiddleware)
                 .wrap(HeadersMiddleware)
                 .configure(|cfg: &mut web::ServiceConfig| config(cfg, &remote_path, &static_path))
         })

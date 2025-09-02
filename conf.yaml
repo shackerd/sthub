@@ -19,7 +19,7 @@ global:
 
 hubs:
   upstream: # not implemented
-    target: 127.0.0.1:3000
+    target: http://127.0.0.1:8787
     remote_path: /proxy_pass
   static:
     # The remote path where the static files are served (e.g. https://domain.com/{here})

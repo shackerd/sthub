@@ -13,6 +13,7 @@ pub struct ConfigurationHubs {
     #[serde(alias = "static")]
     pub _static: Option<StaticHubConfiguration>,
     pub configuration: Option<ConfigurationHubConfiguration>,
+    pub upstream: Option<UpstreamConfiguration>,
 }
 
 #[derive(Deserialize, Debug, Clone)]
@@ -50,6 +51,12 @@ pub struct StaticHubConfiguration {
     pub path: Option<String>,
     pub rewrite_rules: Option<String>,
     pub headers: Option<HashMap<String, String>>,
+}
+
+#[derive(Deserialize, Debug, Clone)]
+pub struct UpstreamConfiguration {
+    pub target: Option<String>,
+    pub remote_path: Option<String>,
 }
 
 #[derive(Deserialize, Debug, Clone)]
