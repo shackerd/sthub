@@ -1,3 +1,5 @@
+use std::path;
+
 use actix_web::{
     dev::{Service, ServiceRequest, ServiceResponse, Transform},
     web::Data,
@@ -73,7 +75,14 @@ where
 
         let matching_upstream_path = matching_upstream_path.as_ref().unwrap();
 
-        if !remote_path.starts_with(matching_upstream_path) {
+        let segments = remote_path.split("/");
+        let first_segment = segments
+            .into_iter()
+            .nth(1)
+            .unwrap_or("")
+            .trim_start_matches('/');
+
+        if first_segment != matching_upstream_path.trim_start_matches('/') {
             // declare here fut to avoid req moving into async block
             let fut = self.service.call(req);
             return Box::pin(async move { fut.await.map(|res| res.map_into_boxed_body()) });
