@@ -1,5 +1,3 @@
-use std::path;
-
 use actix_web::{
     dev::{Service, ServiceRequest, ServiceResponse, Transform},
     web::Data,
@@ -129,6 +127,10 @@ where
             let mut client_resp = actix_web::HttpResponse::build(res.status());
 
             for (header_name, header_value) in res.headers() {
+                // prevent chunked encoding errors
+                if header_name == actix_web::http::header::TRANSFER_ENCODING {
+                    continue;
+                }
                 client_resp.append_header((header_name.clone(), header_value.clone()));
             }
 
