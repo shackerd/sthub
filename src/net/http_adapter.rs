@@ -1,6 +1,6 @@
 use actix_files::Files;
-use actix_rewrite::Engine;
-use actix_web::{App, HttpServer, web};
+use actix_rewrite::{Engine, ServerCtx};
+use actix_web::{App, HttpServer, http::header::DispositionType, web};
 
 use crate::{
     core::configuration::Configuration,
@@ -36,6 +36,16 @@ impl<'a> HttpAdapter<'a> {
             .and_then(|s| s.rewrite_rules.clone());
 
         if let Some(r) = rules.as_ref() {
+            let ctx = ServerCtx::default().document_root(
+                self.configuration
+                    .hubs
+                    .as_ref()
+                    .and_then(|f| f._static.as_ref())
+                    .and_then(|f| f.path.clone())
+                    .unwrap_or(DEFAULT_REMOTE_PATH.to_string()),
+            );
+
+            engine = Engine::new().server_context(ctx.clone());
             engine.add_rules(r).expect("failed to process rules");
         }
 
@@ -90,6 +100,7 @@ fn config(cfg: &mut web::ServiceConfig, remote_path: &str, static_path: &str) {
     cfg.service(
         Files::new(remote_path, static_path)
             .index_file(DEFAULT_DOCUMENT)
+            .disable_content_disposition()
             .use_last_modified(true)
             .prefer_utf8(true),
     );
