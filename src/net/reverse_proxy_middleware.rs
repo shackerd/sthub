@@ -134,7 +134,9 @@ where
                 client_resp.append_header((header_name.clone(), header_value.clone()));
             }
 
-            let body = res.body().limit(10_485_760).await; // Limit to 10MB
+            // limit max size of response body to 32MB
+            let body = res.body().limit(32_768_000).await;
+
             let body = body.map_err(actix_web::error::ErrorBadGateway)?;
             Ok(ServiceResponse::new(
                 http_req,
