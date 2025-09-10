@@ -43,6 +43,7 @@ pub struct EnvConfigurationHubProvider {
 #[derive(Deserialize, Debug, Clone)]
 pub struct DotenvConfigurationProvider {
     pub hotreload: Option<bool>,
+    pub path: Option<String>,
 }
 
 #[derive(Deserialize, Debug, Clone)]

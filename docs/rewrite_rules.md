@@ -47,11 +47,11 @@ If `rewrite_rules` is omitted, the server defaults to a "try files" mode: it ser
   The main rule for rewriting URLs.
   Syntax:
   `RewriteRule <pattern> <target>`
-  - `<pattern>`: Regex pattern to match the request path (relative to `remote_path`).
+  - `<pattern>`: Pattern to match the request path (relative to `remote_path`).
   - `<target>`: The path to serve if the rule matches.
 
 **Note:**
-- Only simple prefix or equality matches are supported. Advanced regex features (lookahead/lookbehind) are **not supported**.
+- Only simple prefix or equality matches are supported. Advanced regex features (lookahead/lookbehind) and regex in conditions (e.g., `RewriteCond %{REQUEST_URI} !\.(js|css)$`) are **not supported**. If you need to exclude asset directories, list them individually.
 - Comments (lines starting with `#`) are not supported in the `rewrite_rules` section.
 
 ---
@@ -118,6 +118,7 @@ hubs:
   Do not include comment lines (starting with `#`) in your `rewrite_rules` section.
 - **Order matters:**
   Rules are evaluated in order. Place more specific rules before generic ones.
+- **Asset exclusion:** If you need to exclude asset directories (like `/js/`, `/css/`), list them individually in your rules, as regex in conditions is not supported. For example, you may need to add explicit conditions for each asset directory you want to exclude from rewrites.
 
 ---
 
@@ -125,5 +126,3 @@ hubs:
 
 - See the [Configuration Guide](configuration.md) for a full overview of all configuration options.
 - For header customization, see [Custom Headers](headers.md).
-
----

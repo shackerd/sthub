@@ -1,6 +1,6 @@
 use actix_files::Files;
 use actix_rewrite::{Engine, ServerCtx};
-use actix_web::{App, HttpServer, http::header::DispositionType, web};
+use actix_web::{App, HttpServer, web};
 
 use crate::{
     core::configuration::Configuration,

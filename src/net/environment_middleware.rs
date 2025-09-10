@@ -71,8 +71,7 @@ where
         if path == conf_remote_path {
             let (req, _pl) = req.into_parts();
             Box::pin(async move {
-                let environment =
-                    environment::JsonEnvironmentVarsTree::new(&format!("{}__", &prefix));
+                let environment = environment::JsonEnvironmentVarsTree::new(&prefix);
                 let tree = environment.build();
                 let resp = HttpResponse::Ok().json(tree);
                 Ok(ServiceResponse::new(req, resp.map_into_boxed_body()))

@@ -2,7 +2,7 @@ use serde_json::{Map, Value};
 use std::{collections::BTreeMap, env};
 
 const SEPARATOR: &str = "__";
-pub const DEFAULT_ENV_PREFIX: &str = "STHUB__";
+pub const DEFAULT_ENV_PREFIX: &str = "STHUB";
 
 /// This module provides functionality to build a JSON tree from environment variables
 /// that start with a specified prefix. The environment variables are expected to be
@@ -14,11 +14,11 @@ pub struct JsonEnvironmentVarsTree {
 impl JsonEnvironmentVarsTree {
     /// Creates a new `JsonEnvironmentVarsTree` instance with the specified prefix.
     pub fn new(prefix: &str) -> Self {
-        if !prefix.ends_with(SEPARATOR) {
-            panic!("Prefix must end with '{SEPARATOR}'");
+        if prefix.ends_with(SEPARATOR) {
+            panic!("Prefix must not end with '{SEPARATOR}'");
         }
         JsonEnvironmentVarsTree {
-            prefix: prefix.to_string(),
+            prefix: format!("{prefix}{SEPARATOR}"),
         }
     }
 
@@ -170,15 +170,15 @@ mod tests {
 
     #[test]
     fn test_new_environment() {
-        let prefix = "STHUB__";
+        let prefix = "STHUB";
         let env = JsonEnvironmentVarsTree::new(prefix);
         assert_eq!(env.prefix, prefix);
     }
 
     #[test]
-    #[should_panic(expected = "Prefix must end with '__'")]
+    #[should_panic(expected = "Prefix must not end with '__'")]
     fn test_new_environment_invalid_prefix() {
-        let prefix = "STHUB";
+        let prefix = "STHUB__";
         JsonEnvironmentVarsTree::new(prefix);
     }
 

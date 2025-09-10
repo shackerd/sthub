@@ -1,31 +1,27 @@
 # Getting started
 
-The server is a simple HTTP server that serves environment variables from the system.
+The server exposes prefixed environment variables as a JSON object at the `/conf` endpoint by default. This path can be configured in your `conf.yaml`.
 
-The server will expose prefixed environment variables as a JSON object at the `/env` endpoint, this is a security measure.
-
-Actually the prefix is `MYAPI__` but will be settable in a configuration file or in CLI in future versions.
-
+The prefix for environment variables is configurable (default: `STHUB`). You can set it in your configuration file under `providers.env.prefix`.
 
 ## How to use it?
 
 Run the server with the following command:
 
 ```bash
-sthub #(cli commands not yet implemented)
+sthub -c ./conf.yaml
 ```
 
 ## Integration
 
-You can request environment variables from the server by making a GET request to the `/env` endpoint.
+You can request environment variables from the server by making a GET request to the `/conf` endpoint.
 
 The server will respond with a JSON object containing the environment variables.
 
-Example of a GET request to `/env` endpoint in javascript:
+Example of a GET request to `/conf` endpoint in JavaScript:
 
 ```javascript
-
-fetch('/env')
+fetch('/conf')
   .then(response => response.json())
   .then(env => {
     console.log('Environment variables loaded:', env);
@@ -41,15 +37,15 @@ fetch('/env')
 ```bash
 export MYAPI__ENV_VAR="Hello, World"
 export MYAPI__SUBLEVEL__ENV_VAR="Another value"
-sthub #(cli commands not yet implemented)
+sthub -c ./conf.yaml
 ```
 
-Then, you can set environment variables by making a POST request to `/env` endpoint:
+Then, you can view environment variables by making a GET request to `/conf` endpoint:
 
 ```bash
-curl -s http://127.0.0.1:8080/env | jq
+curl -s http://127.0.0.1:8080/conf | jq
 ```
 
 ## CORS
 
-By design if you serve your static files from the same origin as the server, you will not have any CORS issues when requesting the `/env` endpoint.
+By design, if you serve your static files from the same origin as the server, you will not have any CORS issues when requesting the `/conf` endpoint.

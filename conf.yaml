@@ -16,11 +16,10 @@ global:
   headers:
     "x-powered-by": sthub
     "foo": "bar"
-
 hubs:
-  upstream: # not implemented
-    target: http://127.0.0.1:8787
-    remote_path: /proxy_pass
+  upstream:
+    target: http://localhost:4200
+    remote_path: /app
   static:
     # The remote path where the static files are served (e.g. https://domain.com/{here})
     remote_path: /
@@ -45,7 +44,6 @@ hubs:
       "access-control-allow-origin": "none"
     providers:
       env:
-        prefix: "STHUB__"
-      dotenv: # (not implemented)
-        path: "./.env"
-        hotreload: true
+        prefix: "STHUB"
+      dotenv:
+        path: ".env"
