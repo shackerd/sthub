@@ -47,17 +47,14 @@ impl Kernel {
             .and_then(|f| f.dotenv);
 
         if conf.as_ref().is_none() {
-            println!("No dotenv configuration found, skipping dotenv initialization.");
             return Ok(());
         }
 
         let conf = conf.unwrap();
 
         if let Some(path) = conf.path {
-            println!("Loading .env from path: {path}");
             dotenvy::from_filename(path).ok();
         } else {
-            println!("Loading .env from default path: .env");
             dotenvy::from_filename(".env").ok();
         }
         Ok(())
